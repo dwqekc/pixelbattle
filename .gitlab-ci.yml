@@ -1,0 +1,16 @@
+stages:
+  - deploy_docker
+
+deploy_job:
+  stage: deploy_docker
+  only:
+    - main
+  tags:
+    - #Enter you gitlab-runner
+  environment: production
+  script:
+    - docker compose stop
+    - docker build -t backend:latest ./backend
+    - OAUTHLIB_INSECURE_TRANSPORT="$OAUTHLIB_INSECURE_TRANSPORT" Broker_Host="$Broker_Host" Broker_Port="$Broker_Port" Broker_Password="$Broker_Password" GOOGLE_CLIENT_ID="$GOOGLE_CLIENT_ID" GOOGLE_PROJECT_ID="$GOOGLE_PROJECT_ID" GOOGLE_CLIENT_SECRET="$GOOGLE_CLIENT_SECRET" GOOGLE_REDIRECT_URI="$GOOGLE_REDIRECT_URI" REDIRECT_APP="$REDIRECT_APP" docker compose up --build -d
+
+

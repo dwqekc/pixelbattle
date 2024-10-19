@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  battle:
+    image: backend:latest
+    restart: always
+    command: bash -c "gunicorn battle.app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level info"
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8000:8000"      
+    environment:
+      - Broker_Host=${Broker_Host}
+      - Broker_Port=${Broker_Port}
+      - Broker_Password=${Broker_Password}
+
+  login:
+    image: backend:latest
+    restart: always
+    command: bash -c "gunicorn login.app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080 --log-level info"
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "8080:8080"  
+    environment:
+      - OAUTHLIB_INSECURE_TRANSPORT=${OAUTHLIB_INSECURE_TRANSPORT}
+      - Broker_Host=${Broker_Host}
+      - Broker_Port=${Broker_Port}
+      - Broker_Password=${Broker_Password}    
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}  
+      - REDIRECT_APP=${REDIRECT_APP}
+
+  redis:
+    image: redis
+    restart: always
+    command: --requirepass ${Broker_Password} --port ${Broker_Port}

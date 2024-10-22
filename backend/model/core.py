@@ -17,8 +17,8 @@ class Battle(Model):
     color: str
 
 class ModelInterface:
-    store = Store(name='db', redis_config=RedisConfig(host=os.getenv('Broker_Host'), port=os.getenv('Broker_Port')))
-    redis = redis.Redis(host=os.getenv('Broker_Host'),port=os.getenv('Broker_Port'))
+    store = Store(name='db', redis_config=RedisConfig(host=os.getenv('Broker_Host'), port=os.getenv('Broker_Port'),password=os.getenv('Broker_Password')))
+    redis = redis.Redis(host=os.getenv('Broker_Host'),port=os.getenv('Broker_Port'),password=os.getenv('Broker_Password'))
     store.register_model(User)
     store.register_model(Battle)
 

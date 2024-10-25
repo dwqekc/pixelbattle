@@ -4,6 +4,7 @@ from pydantic_redis.asyncio import Model, Store, RedisConfig
 import os
 import redis
 from model.wsmanager import ConnectionManager as manager
+import asyncio
 
 class User(Model):
     _primary_key_field: str = 'email'
@@ -29,6 +30,7 @@ class ModelInterface:
             x = stream[0][1][0][1]
             x = {key.decode(): value.decode() for key, value in x.items()}
             await manager.send_message(x,websocket)
+            await asyncio.sleep(0)
     
     @classmethod
     async def set_stream_pixelbattle(cls,pixel:str,color:str):

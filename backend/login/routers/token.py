@@ -1,6 +1,8 @@
 from fastapi import Request,APIRouter
 from fastapi.responses import RedirectResponse
-from controllers.token import create_access_token,create_link,get_access_token
+from controllers.googletoken import create_access_token,create_link
+from controllers.telegramtoken import tgcreate_access_token
+from model.core import ModelInterface
 import datetime
 import os
 
@@ -14,7 +16,16 @@ async def login_google():
 @router.get("/callback")
 async def google_callback(request:Request):
     Authorization,expires = await create_access_token(request)
-    timestamp_utc = expires.replace(tzinfo=datetime.timezone.utc)
     response = RedirectResponse(os.getenv("REDIRECT_APP"))
-    response.set_cookie(key="Authorization", value=Authorization,expires=timestamp_utc)
+    response.set_cookie(key="Authorization", value=Authorization,expires=expires)
+    return response
+
+@router.get("/tgcallback")
+async def telegram_callback(request:Request):
+    query_params = request.query_params
+    if not ModelInterface.get_finduser(userid=query_params.get("id")): 
+        ModelInterface.set_user(userid=query_params.get("id"),username=query_params.get("username"),first_name=query_params.get("first_name"),last_name=query_params.get("last_name"))
+    Authorization = tgcreate_access_token({"type":"telegram","userid":query_params.get("id")})
+    response = RedirectResponse(os.getenv("REDIRECT_APP"))
+    response.set_cookie(key="Authorization", value=Authorization,expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30))
     return response

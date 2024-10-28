@@ -8,6 +8,7 @@ from model.wsmanager import ConnectionManager as manager
 import asyncio
 
 class User(JsonModel):
+    type: str = Field(index=True)
     email: Optional[EmailStr] = Field(index=True,default=None)
     first_name: str = Field(index=True)
     last_name: str = Field(index=True)
@@ -43,8 +44,8 @@ class ModelInterface:
         cls.redis.xadd("battle",{"pixel":pixel,"color":color})
       
     @classmethod
-    def set_user(cls,first_name: str,last_name: str,email: str = None,username: str = None,userid: int = None):
-        user = User(email=email,username=username,userid=userid,first_name=first_name,last_name=last_name)
+    def set_user(cls,type: str,first_name: str,last_name: str,email: str = None,username: str = None,userid: int = None):
+        user = User(type=type,email=email,username=username,userid=userid,first_name=first_name,last_name=last_name)
         user.save()
         
     @classmethod

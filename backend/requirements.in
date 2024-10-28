@@ -4,3 +4,5 @@ gunicorn
 google_auth_oauthlib
 pydantic[email]
 pydantic_redis
+redis_om
+pyjwt

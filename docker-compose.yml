@@ -9,6 +9,7 @@ services:
     ports:
       - "8000:8000"      
     environment:
+      - SECRET_KEY_JWT=${SECRET_KEY_JWT}
       - Broker_Host=${Broker_Host}
       - Broker_Port=${Broker_Port}
       - Broker_Password=${Broker_Password}
@@ -23,6 +24,7 @@ services:
       - "8080:8080"  
     environment:
       - OAUTHLIB_INSECURE_TRANSPORT=${OAUTHLIB_INSECURE_TRANSPORT}
+      - SECRET_KEY_JWT=${SECRET_KEY_JWT}
       - Broker_Host=${Broker_Host}
       - Broker_Port=${Broker_Port}
       - Broker_Password=${Broker_Password}    
@@ -33,6 +35,9 @@ services:
       - REDIRECT_APP=${REDIRECT_APP}
 
   redis:
-    image: redis
+    image: redis/redis-stack-server
     restart: always
-    command: --requirepass ${Broker_Password} --port ${Broker_Port}
+    ports:
+      - "${Broker_Port}:${Broker_Port}"
+    environment:
+      - REDIS_ARGS=--port ${Broker_Port} --requirepass ${Broker_Password}

@@ -8,6 +8,7 @@ import datetime
 import google.auth.transport.requests
 from google.oauth2 import id_token
 from google_auth_oauthlib.flow import Flow
+from model.schemas import TypeAuth
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = os.getenv("OAUTHLIB_INSECURE_TRANSPORT", default="1")
 SECRET_KEY = os.getenv("SECRET_KEY_JWT")
@@ -46,7 +47,7 @@ async def create_access_token(request):
             audience=CLIENT_CONFIG['web']['client_id']
         )
         if not ModelInterface.get_finduser(email=id_info.get("email")):  
-            ModelInterface.set_user(first_name=id_info.get("given_name"),last_name=id_info.get("family_name"),email=id_info.get("email"))     
+            ModelInterface.set_user(type=TypeAuth.google.value,first_name=id_info.get("given_name"),last_name=id_info.get("family_name"),email=id_info.get("email"))     
         expire = credentials.expiry.replace(tzinfo=datetime.timezone.utc)
         to_encode = {"type":"google","token":credentials._id_token}
         to_encode.update({'exp': expire})

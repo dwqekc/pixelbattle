@@ -2,6 +2,7 @@ from pydantic import EmailStr
 from fastapi import WebSocket
 import os
 import redis
+import aioredis
 from typing import Optional
 from redis_om import JsonModel,Field,Migrator,NotFoundError
 from model.wsmanager import ConnectionManager as manager
@@ -26,22 +27,21 @@ class Battle(JsonModel):
         database = redis.Redis(host=os.getenv('Broker_Host'),port=os.getenv('Broker_Port'),password=os.getenv('Broker_Password'))
 
 class ModelInterface:
-    redis = redis.Redis(host=os.getenv('Broker_Host'),port=os.getenv('Broker_Port'),password=os.getenv('Broker_Password'))
+    redis = aioredis.Redis(host=os.getenv('Broker_Host'),port=os.getenv('Broker_Port'),password=os.getenv('Broker_Password'))
 
     @classmethod
     async def get_stream(cls,websocket:WebSocket):
         while True:
-            stream = cls.redis.xread(streams={"battle": "$"},block=0) 
+            stream = await cls.redis.xread(streams={"battle": "$"},block=0) 
             x = stream[0][1][0][1]
             x = {key.decode(): value.decode() for key, value in x.items()}
             if x is not None:
                 await manager.send_message(x,websocket)
-                await asyncio.sleep(0)
 
     @classmethod
     async def set_stream_pixelbattle(cls,pixel:str,color:str):
         cls.set_battle_pixel_color(pixel=pixel,color=color)
-        cls.redis.xadd("battle",{"pixel":pixel,"color":color})
+        await cls.redis.xadd("battle",{"pixel":pixel,"color":color})
       
     @classmethod
     def set_user(cls,type: str,first_name: str,last_name: str,email: str = None,username: str = None,userid: int = None):
@@ -71,4 +71,3 @@ class ModelInterface:
     async def get_model(cls,model):
         Migrator().run()
         return model.find().all()     
- 

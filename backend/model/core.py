@@ -6,7 +6,6 @@ import aioredis
 from typing import Optional
 from redis_om import JsonModel,Field,Migrator,NotFoundError
 from model.wsmanager import ConnectionManager as manager
-import asyncio
 
 class User(JsonModel):
     type: str = Field(index=True)

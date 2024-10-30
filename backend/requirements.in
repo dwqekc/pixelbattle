@@ -6,3 +6,4 @@ pydantic[email]
 pydantic_redis
 redis_om
 pyjwt
+aioredis

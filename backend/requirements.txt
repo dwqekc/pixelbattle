@@ -4,6 +4,8 @@
 #
 #    pip-compile
 #
+aioredis==2.0.1
+    # via -r requirements.in
 annotated-types==0.7.0
     # via pydantic
 anyio==4.6.2.post1
@@ -11,7 +13,9 @@ anyio==4.6.2.post1
     #   starlette
     #   watchfiles
 async-timeout==4.0.3
-    # via redis
+    # via
+    #   aioredis
+    #   redis
 cachetools==5.5.0
     # via google-auth
 certifi==2024.8.30
@@ -115,6 +119,7 @@ types-setuptools==75.2.0.20241025
     # via types-cffi
 typing-extensions==4.12.2
     # via
+    #   aioredis
     #   anyio
     #   fastapi
     #   pydantic

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from login.routers.token import router as login_router
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 origins = ["*"]
 

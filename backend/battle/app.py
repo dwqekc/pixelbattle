@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from battle.routers.battle import router as battle_router
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
 
 origins = ["*"]
 

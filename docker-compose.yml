@@ -29,6 +29,7 @@ services:
       - Broker_Port=${Broker_Port}
       - Broker_Password=${Broker_Password}    
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - DOMAIN_COOKIE=${DOMAIN_COOKIE}
       - GOOGLE_PROJECT_ID=${GOOGLE_PROJECT_ID}
       - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}  
@@ -40,6 +41,7 @@ services:
     ports:
       - "80:80"
     volumes:
+      - ./nginx-static/dist/:/var/www/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
 
   redis:
@@ -48,4 +50,4 @@ services:
     ports:
       - "${Broker_Port}:${Broker_Port}"
     environment:
-      - REDIS_ARGS=--port ${Broker_Port} --requirepass ${Broker_Password}
+      - REDIS_ARGS=--port ${Broker_Port} --requirepass ${Broker_Password} --appendonly yes

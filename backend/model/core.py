@@ -6,12 +6,14 @@ import aioredis
 from typing import Optional
 from redis_om import JsonModel,Field,Migrator,NotFoundError
 from model.wsmanager import ConnectionManager as manager
+import datetime
 
 class User(JsonModel):
     type: str = Field(index=True)
     email: Optional[EmailStr] = Field(index=True,default=None)
     first_name: str = Field(index=True)
     last_name: str = Field(index=True)
+    last_activity: datetime.datetime = Field(index=True,default=datetime.datetime.now(datetime.timezone.utc))
     userid: Optional[int] = Field(index=True,default=None)
     username: Optional[str] = Field(index=True,default=None)
 
@@ -49,8 +51,15 @@ class ModelInterface:
         
     @classmethod
     def set_battle_pixel_color(cls,pixel: str,color: str):
-        battle = Battle(pixel=pixel,color=color)
-        battle.save()     
+        Migrator().run()
+        try:
+            cell = Battle.find(Battle.pixel == pixel).first()
+            if cell:
+                cell.color = color
+                cell.save()
+        except NotFoundError:
+                battle = Battle(pixel=pixel,color=color)
+                battle.save()     
 
     @classmethod
     def get_finduser(cls,userid: int = None,email: str = None):

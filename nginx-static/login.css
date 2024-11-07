@@ -1,0 +1,64 @@
+* {
+    margin: 0;
+    padding: 0;
+  }    
+
+  body {
+    font-family: sans-serif;
+  }
+  
+  #div_HEAD {
+    background-color: var(--bgcolor);
+    padding-top: 1.3rem;
+    padding-bottom: 3%;
+    display: flex;
+    justify-content: flex-start;
+  }
+  
+  #a_HEAD{
+    text-decoration: none;
+    color:hotpink;
+  }
+  
+  #h1_HEAD {
+    align-self: center;
+  }
+  
+  #parent-div{
+      display: flex;
+      justify-content: center;
+  }
+  
+  #google-login {
+      display: flex;
+      align-items: center;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 16px;
+      color: black;
+      box-shadow: 0 2px 5px green;
+      transition: background-color 0.3s;
+  }
+  
+  #google-login:hover {
+      background-color: #f7f7f7;
+  }
+  
+  .google-logo {
+      width: 24px;
+      height: 22px;
+      margin: 0 13px -2px -7px;
+  }
+  
+  #login-div{
+      display: grid;
+      gap: 2em;
+  }
+  
+  @media screen and (min-width: 300px) {
+    #div_HEAD {
+      padding-bottom: 8%;
+    }
+  }  

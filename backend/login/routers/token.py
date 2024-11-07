@@ -18,7 +18,7 @@ async def login_google():
 async def google_callback(request:Request):
     Authorization,expires = await create_access_token(request)
     response = RedirectResponse(os.getenv("REDIRECT_APP"))
-    response.set_cookie(key="Authorization", value=Authorization,expires=expires)
+    response.set_cookie(key="Authorization", value=Authorization,expires=expires,domain=os.getenv("DOMAIN_COOKIE"))
     return response
 
 @router.get("/tgcallback")
@@ -28,5 +28,5 @@ async def telegram_callback(request:Request):
         ModelInterface.set_user(type=TypeAuth.telegram.value,userid=query_params.get("id"),username=query_params.get("username"),first_name=query_params.get("first_name"),last_name=query_params.get("last_name"))
     Authorization = tgcreate_access_token({"type":"telegram","userid":query_params.get("id")})
     response = RedirectResponse(os.getenv("REDIRECT_APP"))
-    response.set_cookie(key="Authorization", value=Authorization,expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30))
+    response.set_cookie(key="Authorization", value=Authorization,expires=datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=30),domain=os.getenv("DOMAIN_COOKIE"))
     return response

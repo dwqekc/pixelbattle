@@ -4,6 +4,8 @@ services:
     image: backend:latest
     restart: always
     command: bash -c "gunicorn battle.app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000 --log-level info"
+    depends_on:
+      - redis
     volumes:
       - ./backend:/backend
     ports:
@@ -18,6 +20,8 @@ services:
     image: backend:latest
     restart: always
     command: bash -c "gunicorn login.app:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080 --log-level info"
+    depends_on:
+      - redis    
     volumes:
       - ./backend:/backend
     ports:
